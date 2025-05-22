@@ -14,8 +14,9 @@ Each top-level directory is named after a research project or paper, and contain
 
 * `/Code/` – Scripts and computational models used in the study (e.g., Python, LaTeX).
 * `/Data/` – Datasets (e.g., CSV files, parameter tables, numerical results).
+* `README.md` – Description of the paper, its objectives, data, and code.
 
-### Included Papers / 含まれる研究論文（略稱）:
+### Included Papers / 含まれる研究論文（略称）:
 
 * `DIRT`
 * `Extension`
@@ -29,14 +30,35 @@ Each top-level directory is named after a research project or paper, and contain
 
 ```
 /DIRT/
-  ├— Code/
-  │    └— simulation_model.py
-  └— Data/
-       └— results.csv
+  ├── Code/
+  │   └── simulation_model.py
+  ├── Data/
+  │   └── results.csv
+  └── README.md
 
 /SCIO/
-  ├— Code/
-  └— Data/
+  ├── Code/
+  ├── Data/
+  └── README.md
+```
+
+Each paper directory includes its own README.md with the following structure:
+
+```
+# [Paper Short Title] – Supplementary Materials
+
+## Overview / 概要
+A brief explanation of the research paper, its objective, and theoretical background.
+
+## Code / コード内容
+Description of the scripts included, software dependencies, and how to run them.
+
+## Data / データ概要
+Explanation of the datasets, format (e.g., CSV), and how they relate to the paper.
+
+## Citation / 引用情報
+If you use this material, please cite the related paper:
+"[Full Paper Title], Hiroto Iwasaki, [Journal/Conference], [Year]"
 ```
 
 ---
@@ -60,7 +82,7 @@ All materials are provided for academic and non-commercial use under the license
 All contents in this repository are licensed under the
 [Creative Commons Zero v1.0 Universal (CC0)](https://creativecommons.org/publicdomain/zero/1.0/).
 
-このリポジトリ内のすべてのコンテンツは、パブリックドメインとして自由に利用可能です。出共の明示や再利用はご自由に行ってください。
+このリポジトリ内のすべてのコンテンツは、パブリックドメインとして自由に利用可能です。出典の明示や再利用はご自由に行ってください。
 
 ---
 
