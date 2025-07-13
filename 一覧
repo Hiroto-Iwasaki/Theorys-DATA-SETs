@@ -1,0 +1,236 @@
+# ===== 既存ファイルの読み込み =====
+x_data = np.load("x_data.npy")[:9999]          # Δt（ゼロ点間隔）
+y_data             [:9999]                     #d/dt (DIRT情報降下)
+primes = np.load("primes.npy")[:9999]          # 素数列
+kappa = np.load("kappa_list.npy")  [:9999]     # κ(p)   kappa_list = 1 - (np.log(np.log(primes)) / np.log(primes))
+info_potential = x_data * prime_density        #情報ポテンシャル = Δt × 素数密度
+log_primes = np.log(primes)[:10000]
+prime_density = 1 / np.log(primes)             # 素数密度 = 1 / log(p)
+stream_vectors.npy	ストリームベクトル	Stream vectors	shape = (M, 3) – スパイク点 (κ, Δt, prime_density) を 3 ステップ後と結ぶ差分ベクトル。各行は [Δκ, ΔΔt, Δρ]。時空情報流の “向き” を示す
+stream_cluster_labels.npy	ベクトルクラスタラベル	Cluster labels for stream vectors	shape = (M,) – DBSCAN により stream_vectors と同じ行順で付与されたクラスタID。-1 はノイズ／外れ値
+用途メモ
+•stream_vectors.npy と stream_cluster_labels.npy はペアで扱い、クラスタごとの平均ベクトルや可視化（quiver plot 等）に利用。
+
+変数一覧に dc_dt を明示的に追加した最新版
+
+変数名	意味（日本語）	Meaning (English)	詳細と計算例 / Notes
+x_data	零点間隔 Δt の系列	Zero‐spacing intervals Δt	python\nx_data = np.load(\"x_data.npy\")[:9999]  # Time interval between consecutive zeros\n
+y_data	元の観測系列（例：情報ポテンシャル c）	Original observational series (e.g., information potential c)	python\ny_data = np.load(\"y_data.npy\")[:9999]  # Base time series used to derive dc_dt\n
+dc_dt	情報降下の時間微分 dc/dt	Time derivative of information descent dc/dt	python\ndc_dt = np.load(\"dc_dt.npy\")[:9999]  # Pre-computed derivative of y_data\n
+primes	先頭 9 999 個の素数列	First 9 999 prime numbers	python\nprimes = np.load(\"primes.npy\")[:9999]\n
+kappa	構造強度 κ(p)	Structural intensity κ(p)	python\nkappa = 1 - (np.log(np.log(primes)) / np.log(primes))\n# or\nkappa = np.load(\"kappa_list.npy\")\n
+
+使い分けのポイント
+
+カテゴリ	静的／動的	主な用途
+y_data	静的（原系列）	FFT や派生量計算の入力、基準値の可視化
+dc_dt	動的（１階導関数）	構造崩壊点の検出、保存性の時間変動解析
+x_data	静的（Δt 軸）	横軸として共通使用、周期性解析の基準
+primes, kappa	準静的（離散構造）	素数的秩序性の評価、クラスタリング補助特徴
+
+
+解析用 npy ファイルと作成される主要変数の一覧
+
+― 高校生でも読めるように、日英対訳で要点を整理しました ―
+
+変数 / ファイル	意味（日本語）	Meaning (English)	読み込み例 / 計算式・用途
+x_data  ← x_data.npy	零点（ゼロ点）間隔 Δt の系列	Zero–spacing intervals Δt	python x_data = np.load("x_data.npy")[:9999]横軸に使う共通タイムスタンプ
+y_data  ← y_data.npy	元観測列（情報ポテンシャル c など）	Original observational series (e.g. info-potential c)	python y_data = np.load("y_data.npy")[:9999]FFT・微分の基データ
+dc_dt  ← dc_dt.npy	情報降下の時間微分 dc/dt	Time derivative of information descent dc/dt	python dc_dt = np.load("dc_dt.npy")[:9999]構造崩壊点の検出に使用
+primes  ← primes.npy	先頭 9 999 個の素数列	First 9 999 prime numbers	python primes = np.load("primes.npy")[:9999]離散秩序性の解析軸
+kappa  ← kappa_list.npy	構造強度 κ(p)	Structural intensity κ(p)	python kappa = 1 - (np.log(np.log(primes))/np.log(primes))または事前計算値を読み込み
+energy_bins_hi  ← energy_bins_hi.npy	高エネ側 bin エッジ	High-energy bin edges	10–30 GeV 解析の可変境界
+hi_ref  ← hi_ref.npy	高エネ基準フルエンス	High-energy reference fluence	信号 vs. 背景の規格化に使用
+energy_bins  ← energy_bins.npy	全域エネ bin エッジ	Global energy-bin edges	図・ヒストグラム共通の横軸
+counts_obs  ← counts_obs.npy	観測イベント数ヒスト	Observed event counts	IceCube 10–30 GeV 実測スペクトル
+mcmc_chain  ← mcmc_chain.npy	MCMC サンプラ鎖	Posterior MCMC chain	τ_{det}, κ, R_{lock} などの事後分布
+
+
+⸻
+
+使い分けのポイント（まとめ）
+
+カテゴリ	静的 / 動的	主な用途
+y_data	静的（原系列）	FFT・派生量計算の入力、グラフ基準線
+dc_dt	動的（一次導関数）	保存性の時間変動・ピーク検出
+x_data	静的（Δt 軸）	すべての時間系プロットの横軸
+primes, kappa	準静的（離散構造）	素数秩序性の評価、クラスタリング特徴量
+energy_bins*, counts_obs	実験系統	スペクトル図・信号対背景の計算
+mcmc_chain	解析成果物	パラメータ推定・可視化（corner plot など）
+
+Tips
+	•	ファイル名と変数名を 1 : 1 で保つと再現性が高まります。
+	•	energy_bins 系は x 軸、counts_obs は y 軸 にそのまま渡せる形にしておくと可視化が楽です。
+変数・ファイル一覧（概要まとめ）
+
+変数 / ファイル	日本語の意味	English meaning	形状・計算方法 / Notes
+x_data	零点間隔 Δt	Zero–spacing Δt	shape = (9 999,) -– 連続する非自明零点間の間隔を秒(?)単位で保持
+y_data	dI/dt（DIRT 情報降下速度）	Information-descent rate dI/dt	shape = (9 999,) -– DIRT フレームでの情報量変化率
+primes	素数列 p	Prime numbers p	shape = (9 999,) -– 先頭 9 999 個の素数
+kappa	κ(p)（秩序指標）	Order index κ(p)	κ = 1 − ln ln p / ln p
+log_primes	\ln p	Natural log of primes	shape = (10 000,) – 上限 1 万要素で計算
+prime_density	素数密度 1/ \ln p	Prime density 1/ \ln p	素数定理に基づく近似密度
+info_potential	情報ポテンシャル	Information potential	\text{info\_potential} = \Delta t \times (1/\ln p)
+stream_vectors.npy	ストリームベクトル	Stream vectors	shape = (M, 3) – スパイク点 (κ, Δt, prime_density) を 3 ステップ後と結ぶ差分ベクトル。各行は [Δκ, ΔΔt, Δρ]。時空情報流の “向き” を示す
+stream_cluster_labels.npy	ベクトルクラスタラベル	Cluster labels for stream vectors	shape = (M,) – DBSCAN により stream_vectors と同じ行順で付与されたクラスタID。-1 はノイズ／外れ値
+
+用途メモ
+	•	stream_vectors.npy と stream_cluster_labels.npy はペアで扱い、クラスタごとの平均ベクトルや可視化（quiver plot 等）に利用。
+	•	kappa, info_potential, prime_density など既存スカラー系列は、ベクトル成分の物理的解釈（秩序変化・密度変化）を与える参照軸として機能する。
+
+
+
+
+
+
+
+
+
+⸻
+
+📦 1. Overview of Distributed Files
+
+File name	Purpose	Typical shape / dtype	Sample load
+energy_bins.npy	Energy‐bin edges for the low range (≈ 10–30 GeV)	(N + 1,), float64	python\nE_lo = np.load("energy_bins.npy")\n
+energy_bins_hi.npy	Energy‐bin edges for the high range (≈ 30–100 GeV)	(M + 1,), float64	python\nE_hi = np.load("energy_bins_hi.npy")\n
+hi_ref.npy	Model spectrum on the high‐energy side (expected counts μ)	(M,), float64	python\nmu_hi = np.load("hi_ref.npy")\n
+counts_obs.npy	Observed event counts (low + high concatenated)	(N + M,), int32	python\nn_obs = np.load("counts_obs.npy")\n
+mcmc_chain.npy	MCMC chain → n_step × n_walk × n_param (0 = τ_det, 1 = k, 2 = κ, …)	(2500, 60, 3), float64	python\nchain = np.load("mcmc_chain.npy")\n
+stream_vectors.npy	3-step stream vectors	(M, 3), float64	python\nvec = np.load("stream_vectors.npy")\n# each row = [Δκ, ΔΔt, Δρ]\n
+stream_cluster_labels.npy	DBSCAN labels for the stream vectors	(M,), int32	python\nlab = np.load("stream_cluster_labels.npy")\n
+
+Notes
+	•	Bin‐edge arrays list the left and right edges of each energy bin (element 0 & 1 form the first bin).
+	•	hi_ref.npy stores only the model expectation, computed as
+\mu_{\text{hi}} = \Phi(E_{\text{mid}})\,A_{\text{eff}}\,(4\pi)\,\Delta T.
+	•	Use stream_vectors.npy and stream_cluster_labels.npy together for quiver plots or cluster-wise mean‐vector analysis.
+	•	lab == -1 marks noise/outliers.
+
+⸻
+
+🔧 2. Derived Variables Used in the Analyses
+
+The five core variables below match the sample script; combining x_data, y_data, dc_dt, primes, and kappa (κ) reproduces the phase analysis and DIRT parameter estimation.
+
+Variable	Meaning (JP)	Meaning (EN)	Definition / code snippet
+x_data	零点間隔 Δt 系列	Zero-spacing intervals Δt	python\nx_data = np.load("x_data.npy")[:9999]\n
+y_data	原系列 (情報ポテンシャル c)	Original time series (info-potential c)	python\ny_data = np.load("y_data.npy")[:9999]\n
+dc_dt	情報降下の時間微分 dc/dt	Time derivative of info-descent	python\ndc_dt = np.load("dc_dt.npy")[:9999]\n
+primes	先頭 9999 個の素数列	First 9999 prime numbers	python\nprimes = np.load("primes.npy")[:9999]\n
+kappa	構造強度 κ(p)	Structural intensity κ(p)	python\nkappa = 1 - np.log(np.log(primes)) / np.log(primes)\n# or: kappa = np.load(\"kappa_list.npy\")\n
+prime_density	素数密度 ρ(p)	Prime density ρ(p)	python\nprime_density = 1 / np.log(primes)\n
+log_primes	log p 系列	Natural logs of primes	python\nlog_primes = np.log(primes)[:10000]\n
+info_potential	情報ポテンシャル c	Information potential c	python\ninfo_potential = x_data * prime_density\n
+
+Usage Guidelines
+
+Category	Static / Dynamic	Typical use
+y_data	static	FFT, derived metrics, baseline plots
+dc_dt	dynamic	Detect structural breakpoints, track preservation
+x_data	static	Common x-axis for periodicity analysis
+primes, kappa	quasi-static	Evaluate prime-order structure, clustering features
+info_potential	static	Main series for phase extraction / FFT
+prime_density, log_primes	quasi-static	Visualize prime regularity, generate info_potential
+stream_vectors, stream_cluster_labels	dynamic (3-step streams)	Vector-field direction (“information flow”) & cluster analysis
+
+*info_potential sometimes appears as an alias for y_data in scripts.
+Prime density adopts the Riemann prime-number theorem approximation ρ(p) ≈ 1/\ln p.
+
+⸻
+
+🚀 3. Quick-Start Mini Script
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Load core data
+E_lo  = np.load('energy_bins.npy')
+E_hi  = np.load('energy_bins_hi.npy')
+mu_hi = np.load('hi_ref.npy')
+n_obs = np.load('counts_obs.npy')
+
+# --- Mid-bin energies & residuals
+E_mid_hi = 0.5 * (E_hi[:-1] + E_hi[1:])
+residual = (n_obs[-len(mu_hi):] - mu_hi) / np.sqrt(mu_hi)
+
+plt.loglog(E_mid_hi, residual, 'o')
+plt.axhline(0, ls=':')
+plt.xlabel('Energy [GeV]')
+plt.ylabel('(obs − μ) / √μ')
+plt.tight_layout()
+plt.show()
+
+⸻
+
+📦 1. 配布ファイル概要
+
+ファイル名	役割	典型 shape / dtype	サンプルロード
+energy_bins.npy	低エネルギー帯（10–30 GeV 想定）のエネルギー境界配列	(N+1,), float64	python\nE_lo = np.load('energy_bins.npy')\n
+energy_bins_hi.npy	高エネルギー帯（30–100 GeV）のエネルギー境界配列	(M+1,), float64	python\nE_hi = np.load('energy_bins_hi.npy')\n
+hi_ref.npy	高エネルギー側モデルスペクトル（期待値 μ）	(M,), float64	python\nmu_hi = np.load('hi_ref.npy')\n
+counts_obs.npy	実観測カウント（低 + 高を連結済み）	(N+M,), int32	python\nn_obs = np.load('counts_obs.npy')\n
+mcmc_chain.npy	MCMC 連鎖（shape = n_step × n_walk × n_param）0: $\tau_{\text{det}}$, 1: $k$, 2: $\kappa$ など	(2500, 60, 3), float64	python\nchain = np.load('mcmc_chain.npy')\n
+stream_vectors.npy	ストリームベクトル（3-step 差分）	(M, 3), float64	python\nvec = np.load('stream_vectors.npy')\n# each row = [Δκ, ΔΔt, Δρ]\n
+stream_cluster_labels.npy	上記ベクトルの DBSCAN ラベル	(M,), int32	python\nlab = np.load('stream_cluster_labels.npy')\n
+
+メモ
+境界配列は「エネルギー bin の左右端」を列挙する形式です（例: 0 番目と 1 番目で 1 つの bin）。
+hi_ref.npy は式 mu_hi = Φ(E_mid) · A_eff · 4πΔT で計算した モデル期待値 のみを格納しています。
+Quiver plot や「クラスタ別平均ベクトル」解析にペアで使用します。
+lab == -1 はノイズ点。
+
+⸻
+
+🔧 2. 解析で用いる派生変数
+
+以下 5 変数は既出のサンプルスクリプトと対応しています。
+x_data, y_data, dc_dt, primes, kappa (κ) を併用することで 位相解析 + DIRT パラメータ推定 が再現可能です。
+
+変数名	意味（日本語）	Meaning (English)	定義 / 計算例
+x_data	零点間隔 Δt 系列	Zero–spacing intervals Δt	python\nx_data = np.load('x_data.npy')[:9999]\n
+y_data	原系列 (情報ポテンシャル c)	Original time series (info-potential c)	python\ny_data = np.load('y_data.npy')[:9999]\n
+dc_dt	情報降下の時間微分 dc/dt	Time derivative of info-descent	python\ndc_dt = np.load('dc_dt.npy')[:9999]\n
+primes	先頭 9999 個の素数列	First 9999 prime numbers	python\nprimes = np.load('primes.npy')[:9999]\n
+kappa	構造強度 κ(p)	Structural intensity κ(p)	python\nkappa = 1 - np.log(np.log(primes)) / np.log(primes)\n# または kappa = np.load('kappa_list.npy')\n
+prime_density	素数密度 ρ(p)	Prime density ρ(p)	python\nprime_density = 1 / np.log(primes)\n
+log_primes	log p の系列	Natural logs of primes	python\nlog_primes = np.log(primes)[:10000]\n
+info_potential	情報ポテンシャル c	Information potential c	python\ninfo_potential = x_data * prime_density\n
+
+使い分けの目安
+
+カテゴリ	静的 / 動的	主な用途
+y_data	静的	FFT・派生量計算、基準プロット
+dc_dt	動的	構造崩壊点の検出、保存性トラッキング
+x_data	静的	共通横軸 (周期性解析)
+primes, kappa	準静的	素数的秩序性の評価、クラスタリング特徴量
+info_potential (= y_data)	静的	位相抽出・FFT の主系列
+prime_density, log_primes	準静的	素数規則性の可視化、info_potential 生成
+stream_vectors, stream_cluster_labels	動的（3-step ストリーム）	“情報流” の向き（ベクトル場）とクラスタ解析
+
+補足
+	•	info_potential が y_data の別名として解析に登場する場合があります。
+	•	「素数密度」はリーマン素数定理の近似 ρ(p) ≈ 1/ln p を直採用しています。
+⸻
+
+🚀 3. すぐに動かすミニコード例
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Load core data
+E_lo  = np.load('energy_bins.npy')
+E_hi  = np.load('energy_bins_hi.npy')
+mu_hi = np.load('hi_ref.npy')
+n_obs = np.load('counts_obs.npy')
+
+# --- Mid‐bin energies & residuals
+E_mid_hi = 0.5 * (E_hi[:-1] + E_hi[1:])
+residual = (n_obs[-len(mu_hi):] - mu_hi) / np.sqrt(mu_hi)
+
+plt.loglog(E_mid_hi, residual, "o")
+plt.axhline(0, ls=":")
+plt.xlabel("Energy [GeV]"); plt.ylabel("(obs - μ)/√μ")
+plt.tight_layout(); plt.show()
+
+
+⸻
