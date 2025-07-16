@@ -2,42 +2,61 @@
 
 ## Overview / 概要
 
-This directory contains supplementary materials, including data and the final analysis code, for the research paper "An Interacting Information Universe: A New Cosmological Model Based on DIRT Confronts Supernova Data."
+This directory contains supplementary materials for the research paper "An Interacting Information Universe: A DIRT-based Cosmological Model Confronts Joint Supernova and Baryon Acoustic Oscillation Data."
 
-This paper proposes and verifies a new cosmological model derived from the Dimensional Infinite Regression Theory (DIRT). In this "Interaction Model," the cosmic expansion is governed by a novel physical interaction between conventional matter and an information-based dark energy component, mediated by the Information Lock Coefficient ($R_{lock}$). We test this model against the full Pantheon+ Type Ia supernova dataset, including its complete systematic covariance matrix. Our analysis demonstrates that the model successfully explains the observed expansion history with high statistical significance. This success allows for the first-ever measurement of the fundamental DIRT interaction strength ($\Gamma_0$) and provides robust evidence for cosmic anisotropy ($A_2$), offering a new, viable framework for understanding the universe.
+This paper proposes and verifies a new cosmological model derived from the Dimensional Infinite Regression Theory (DIRT). In this "Interaction Model," the cosmic expansion is governed by an interaction between matter and dark energy, mediated by the Information Lock Coefficient ($R_{lock}$). We test this model against a combination of two major cosmological probes: the full **Pantheon+ Type Ia supernova (SNe)** dataset and a compilation of **Baryon Acoustic Oscillation (BAO)** data.
 
-本ディレクトリは、研究論文「相互作用する情報宇宙：DIRT新宇宙モデルの超新星データによる検証」の補足資料（データおよび解析コード）を含みます。
+Our joint MCMC analysis demonstrates that the model successfully explains the observed expansion history from both early and late universe probes with high statistical significance. This success confirms the model's **robustness and universality**. The joint analysis provides significantly tighter constraints on all cosmological parameters, allowing for a precision measurement of the DIRT interaction strength ($\Gamma_0$) and cosmic anisotropy ($A_2$). Most notably, it yields a Hubble constant of **$H_0 = 63.19 \pm 0.66$ km/s/Mpc**, a novel value distinct from existing measurements, offering a new perspective on the Hubble tension.
 
-本研究は、次元無限回帰理論（DIRT）に基づく新しい宇宙モデル「相互作用モデル」を提唱し、その検証を行うものです。このモデルでは、情報の確定度（$R_{lock}$）が、通常の物質と情報的なダークエネルギー成分との間のエネルギーのやり取りを仲介することで、宇宙の膨張が支配されると考えます。このモデルをIa型超新星（Pantheon+）の完全なデータセットを用いて厳密にテストした結果、観測される膨張史を統計的に極めて良く説明することに成功しました。これにより、DIRT理論の根幹をなす相互作用強度（$\Gamma_0$）と宇宙の異方性（$A_2$）の測定に初めて成功し、宇宙の謎を解く新しい検証可能な理論体系を提示します。
+---
+本ディレクトリは、研究論文「相互作用する情報宇宙：DIRT新宇宙モデルの超新星およびBAOデータによる統合検証」の補足資料を含みます。
+
+本研究は、次元無限回帰理論（DIRT）に基づく新しい宇宙モデル「相互作用モデル」を提唱し、その検証を行うものです。このモデルでは、情報の確定度（$R_{lock}$）が物質とダークエネルギー間のエネルギー相互作用を仲介することで、宇宙の膨張が支配されると考えます。このモデルを、後期宇宙の探査針である**Ia型超新星（Pantheon+）**と、初期宇宙の探査針である**バリオン音響振動（BAO）**の2大観測データを組み合わせて厳密にテストしました。
+
+統合解析の結果、本モデルは起源の異なる両方の観測データを驚くほど良く説明し、その**堅牢性と普遍性**が強く示唆されました。この統合解析はパラメータの誤差を劇的に縮小させ、DIRT理論の根幹をなす相互作用強度（$\Gamma_0$）と宇宙の異方性（$A_2$）の精密測定を可能にしました。最も重要な成果として、ハッブル定数として**$H_0 = 63.19 \pm 0.66$ km/s/Mpc**という、既存のどの測定値とも異なる新しい値を導き出しました。これはハッブルテンション問題に全く新しい視点を提示するものです。
 
 ---
 
 ## Code / コード内容
 
-The `/Code` directory contains the main Jupyter Notebook (`AIIU_analysis.ipynb`) used for the final analysis presented in the paper.
+The `/Code` directory contains the main Jupyter Notebook (`AIIU_joint_analysis.ipynb`) used for the final analysis.
 
-* **Description**: The notebook performs the definitive nine-parameter MCMC analysis of the DIRT "Interaction Model" using the full Pantheon+ SNe Ia dataset. It includes all necessary functions for defining the model, calculating the likelihood with the full covariance matrix, and features a robust pause-and-resume capability for long-duration runs via the `emcee` backend.
+* **Description**: The notebook performs the definitive MCMC analyses for **both the DIRT "Interaction Model" (9 parameters) and the standard $\Lambda$CDM model (3 parameters)** using a combined likelihood from Pantheon+ SNe and BAO data. This allows for the direct statistical comparison (AIC/BIC) presented in the paper.
 * **Dependencies**: The code relies on standard Python libraries such as `numpy`, `pandas`, `matplotlib`, `scipy`, `astropy`, `emcee`, and `corner`.
-* **How to Run**: Execute the cells in the notebook sequentially. The script is designed to automatically save its progress to a backend file (`sne_interaction_model_backend.h5`). If the session is interrupted, simply re-running the notebook will resume the calculation from the last saved state.
+* **How to Run**: Execute the cells in the notebook sequentially. The script is designed to save its progress to backend files. If the session is interrupted, re-running the notebook will resume the MCMC sampling from the last saved state.
 
-`/Code`ディレクトリには、論文で提示された最終解析を実行するための主要なJupyter Notebook (`AIIU_analysis.ipynb`) が含まれています。ノートブックは、DIRT「相互作用モデル」の9パラメータMCMC解析を実行します。完全な共分散行列を用いた尤度計算や、`emcee`のバックエンド機能による長時間の計算に対応した中断・再開機能も含まれています。実行には `numpy`, `pandas`, `astropy`, `emcee`, `corner` などのライブラリが必要です。
+---
+`/Code`ディレクトリには、最終解析を実行するための主要なJupyter Notebook (`AIIU_joint_analysis.ipynb`) が含まれています。ノートブックは、**DIRT「相互作用モデル」（9パラメータ）と、比較対象である標準「$\Lambda$CDMモデル」（3パラメータ）の両方**について、Pantheon+（SNe）とBAOデータの統合尤度を用いたMCMC解析を実行します。これにより、論文で提示された統計的なモデル比較（AIC/BIC）が可能になります。
 
 ---
 
 ## Data / データ概要
 
-The `/Data` directory contains the input data required to run the analysis and the key output files generated by the notebook.
+The `/Data` directory contains the input data required to run the analysis. The main directory contains the key output files generated by the notebook.
 
-* **Input Data**:
-    * `Pantheon+SH0ES.dat`: The public data file for the Pantheon+ Type Ia supernovae compilation, containing magnitudes, redshifts, etc.
+* **Input Data (in `/Data`)**:
+    * `Pantheon+SH0ES.dat`: The public data file for the Pantheon+ Type Ia supernovae compilation.
     * `Pantheon+SH0ES_STAT+SYS.cov`: The full statistical and systematic covariance matrix for the Pantheon+ dataset.
+    * *(Assumed)* `bao_data_compilation.txt`, `bao_covariance_matrix.txt`: Files containing the compiled BAO data points and their covariance.
 
-* **Key Output Files**:
-    * `sne_interaction_model_backend.h5`: The HDF5 backend file that stores the full state of the MCMC chains. This file is used for resuming calculations and for final analysis.
-    * `AIIU_corner_plot.png`: (例) 最終的なパラメータの事後分布を示すコーナープロット。
-    * `AIIU_fit_vs_data.png`: (例) 最適フィットモデルと観測データを比較するプロット。
+* **Key Output Files (in main directory)**:
+    * `joint_sne_bao_backend.h5`: The HDF5 backend file that stores the full MCMC chains for the **DIRT model**.
+    * `lcdm_sne_bao_backend.h5`: The HDF5 backend file that stores the full MCMC chains for the **$\Lambda$CDM model**.
+    * `SNe_BAO_integrated_analysis.png`: The final corner plot showing the posterior distributions from the joint DIRT model analysis (Paper, Figure 1).
+    * `Dirt_vs_lambda_plot_4.png`: The plot comparing the theoretical CMB power spectrum of the DIRT model against Planck data and $\Lambda$CDM (Paper, Figure 2).
 
-`/Data`ディレクトリには、解析の実行に必要な入力データ（Pantheon+カタログと共分散行列）と、ノートブックによって生成される主要な出力ファイルが格納されます。
+---
+`/Data`ディレクトリには、解析の実行に必要な入力データが格納されます。主要な出力ファイルは、メインディレクトリに生成されます。
+
+* **入力データ (`/Data`内)**:
+    * `Pantheon+SH0ES.dat`, `Pantheon+SH0ES_STAT+SYS.cov`: Pantheon+のデータと共分散行列。
+    * *(想定)* `bao_data_compilation.txt`, `bao_covariance_matrix.txt`: BAOのデータ点と共分散行列。
+
+* **主要な出力ファイル (メインディレクトリ内)**:
+    * `joint_sne_bao_backend.h5`: **DIRTモデル**のMCMCチェーンを保存するHDF5バックエンドファイル。
+    * `lcdm_sne_bao_backend.h5`: **$\Lambda$CDMモデル**のMCMCチェーンを保存するHDF5バックエンドファイル。
+    * `SNe_BAO_integrated_analysis.png`: DIRTモデルの統合解析結果を示すコーナープロット（論文 図1）。
+    * `Dirt_vs_lambda_plot_4.png`: DIRTモデルのCMBパワースペクトルと観測データを比較したプロット（論文 図2）。
 
 ---
 
@@ -47,4 +66,4 @@ If you use any material from this study, please cite the main paper:
 
 研究のいずれかの資料を使用する場合は、主要な論文を引用してください：
 
-> Iwasaki, H. (2025). "An Interacting Information Universe: A New Cosmological Model Based on DIRT Confronts Supernova Data." *(Journal/Preprint details to be added)*
+> Iwasaki, H. (2025). "An Interacting Information Universe: A DIRT-based Cosmological Model Confronts Joint Supernova and Baryon Acoustic Oscillation Data." *(Journal/Preprint details to be added)*
