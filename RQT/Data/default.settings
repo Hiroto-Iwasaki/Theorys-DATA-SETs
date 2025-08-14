@@ -1,0 +1,7 @@
+# PyR@TE v3 settings (no sections)
+CreateFolder: True
+Results: Output
+LatexOutput: True
+PythonOutput: True
+MathematicaOutput: False
+# ループ階数はCLIで指定するのが楽（-l max）
