@@ -1,36 +1,37 @@
+⸻
+
 F2DV — √2 離散真空からのフレーバー（F2DV）
 
 F2DV — Flavor from a √2-Discrete Vacuum (F2DV)
 
-質量連鎖（主階層＋微補正）＋混合則＋\epsilon_{13} 残差保存＋dim-6 EFT 接続＋幾何学シーソー（NO/IO）
-Hybrid mass chains (main hierarchy + micro-correction) + mixing rule + residual \epsilon_{13} preservation + dim-6 EFT link + geometric seesaw (NO/IO)
-
 本リポジトリは、研究論文（本稿）に付随する解析コード・生成図・補助データをまとめたものです。
 This repository collects the analysis code, generated figures, and auxiliary data associated with the paper.
 
-対象論文（作業タイトル）：“Flavor from a √2-Discrete Vacuum: Hybrid Mass Chains, GAV Mixing, and EFT-Linked Residuals”
+対象論文（作業タイトル）： “Flavor from a √2-Discrete Vacuum: Hybrid Mass Chains, GAV Mixing, and EFT-Linked Residuals”
 Target paper (working title): “Flavor from a √2-Discrete Vacuum: Hybrid Mass Chains, GAV Mixing, and EFT-Linked Residuals”
+
+含む要素：質量連鎖（主階層＋微補正）＋混合則＋\epsilon_{13} 残差保存＋dim-6 EFT 接続＋幾何学シーソー（NO/IO）
+Includes: hybrid mass chains (main hierarchy + micro-correction) + mixing rule + residual \epsilon_{13} preservation + dim-6 EFT link + geometric seesaw (NO/IO)
 
 ⸻
 
 Overview / 概要
 
-Overview / Overview
-
-このディレクトリには、NO/IO 分岐を含む Gaussian MC、図の生成、統計量（平均・分散・CI・相関）の算出に必要なスクリプトが含まれます。
+このディレクトリには、NO/IO 分岐を含む Gaussian MC、図の生成、統計量（平均・分散・CI・相関）の算出スクリプトが含まれます。
 This directory contains scripts for Gaussian Monte Carlo with NO/IO branches, figure generation, and computation of statistics (mean, variance, confidence intervals, correlations).
 
-主な生成物は、\epsilon_{13}^{(\ell)} の分布ヒストグラムと、\epsilon_{13}^{(\ell)} vs \sum m_\nu の散布図（low/high octant overlay）です。
+主な生成物は、\epsilon_{13}^{(\ell)} の分布ヒストグラム、\epsilon_{13}^{(\ell)} vs \sum m_\nu の散布図（low/high octant overlay）です。
 The main outputs are histograms of \epsilon_{13}^{(\ell)} and scatter plots of \epsilon_{13}^{(\ell)} vs \sum m_\nu (low/high octant overlay).
+
+加えて、m_\beta の分布図（low/high overlay）と、代表質量を用いた m_{\beta\beta} 位相スキャン要約（CSV）も生成します。
+In addition, it generates the m_\beta distribution (low/high overlay) and a representative-mass m_{\beta\beta} phase-scan summary (CSV).
 
 ⸻
 
 Research Context / 研究背景（今回の論文の主張）
 
-Research Context / Research context (claims of this paper)
-
 本稿の狙いは、SM Yukawa セクターの多数パラメータを「少数の生成則＋残差保存」に分解し、観測可能量へ直接接続することです。
-The goal of this work is to decompose the many SM Yukawa parameters into “a small set of generation rules + residual preservation,” and connect them directly to observable quantities.
+The goal is to decompose the many SM Yukawa parameters into “a small set of generation rules + residual preservation,” and connect them directly to observables.
 
 具体的には、(i) 質量階層、(ii) 混合角階層、(iii) 13チャネル残差 \epsilon_{13}、(iv) dim-6 EFT、(v) 幾何学シーソーによる絶対質量固定（NO/IO）を一本化します。
 Concretely, we unify (i) mass hierarchies, (ii) mixing-angle hierarchies, (iii) the 13-channel residual \epsilon_{13}, (iv) dim-6 EFT, and (v) geometric seesaw anchoring of absolute masses (NO/IO).
@@ -38,8 +39,6 @@ Concretely, we unify (i) mass hierarchies, (ii) mixing-angle hierarchies, (iii) 
 ⸻
 
 Core Ingredients / 中核要素（式 → 直後に「意味」と「役割」）
-
-Core Ingredients / Core ingredients (equation → immediate “meaning” and “role”)
 
 1) 質量連鎖：主階層＋微補正
 
@@ -65,7 +64,7 @@ This decomposes mass hierarchies into “integer \sqrt2 steps” plus “Casimir
 
 ⸻
 
-2) 混合則（GAV型）：CKM/PMNS の階層を同一形式で生成
+2) 混合則（GAV型）：CKM/PMNS を同一形式で生成
 
 2) Mixing rule (GAV-type): generating CKM/PMNS hierarchies in a unified form
 
@@ -89,31 +88,36 @@ This generates mixing-angle hierarchies uniformly and connects information from 
 
 ⸻
 
-3) 13チャネル残差の保存：\epsilon_{13}
+3) 13チャネル残差の保存：\epsilon_{13}^{(\ell)}（レプトン側）
 
-3) 13-channel residual preservation: \epsilon_{13}
+3) 13-channel residual preservation: \epsilon_{13}^{(\ell)} (lepton sector)
 
-x_{13}=\sqrt2-\epsilon_{13}
+\epsilon_{13}^{(\ell)}=\sqrt2-\log_2\!\left(\frac{s_{13,\rm base}}{s_{13,\rm obs}}\right),\qquad
+x_{13,\rm eff}^{(\ell)}=\sqrt2-\epsilon_{13}^{(\ell)}
 
 意味（各項）
 Meaning (each term)
-	•	x_{13}：13抑圧の実効指数（クォーク／レプトン側で定義）です。
-x_{13}: an effective exponent for 13 suppression (defined for quark/lepton sectors).
-	•	\sqrt2：原理値として固定したい基準です。
-\sqrt2: the reference “principle value” we aim to keep fixed.
-	•	\epsilon_{13}：原理値からのズレ（残差）です。
-\epsilon_{13}: deviation from the principle value (residual).
+	•	s_{13,\rm base}：(12,23) から得た (p,r) により生成される 13 の基準値です。
+s_{13,\rm base}: a 13-channel baseline generated from (p,r) inferred by (12,23).
+	•	s_{13,\rm obs}：観測（入力）の s_{13} です。
+s_{13,\rm obs}: the observed/input s_{13}.
+	•	\log_2(s_{13,\rm base}/s_{13,\rm obs})：13成分の実効指数（ズレの強さ）です。
+\log_2(s_{13,\rm base}/s_{13,\rm obs}): an effective exponent quantifying the deviation.
+	•	\epsilon_{13}^{(\ell)}：\sqrt2 原理値からの残差（保存されるズレ）です。
+\epsilon_{13}^{(\ell)}: the residual from the \sqrt2 principle value (the preserved deviation).
+	•	x_{13,\rm eff}^{(\ell)}：論文の x=\sqrt2-\epsilon に一致させる実効変数です。
+x_{13,\rm eff}^{(\ell)}: an effective variable to match the paper form x=\sqrt2-\epsilon.
 
 役割
 Role
-原理値 \sqrt2 を維持しつつ、現実の歪みを \epsilon_{13} に分離して保存し、EFT/UV解釈へ渡します。
-While keeping \sqrt2 as the principle value, this isolates real-world distortions into \epsilon_{13} and passes them to EFT/UV interpretations.
+原理値 \sqrt2 を維持しつつ、現実の歪みを \epsilon_{13}^{(\ell)} として分離・保存し、EFT/UV解釈へ渡します。
+While keeping \sqrt2 as the principle value, this isolates real-world distortions into \epsilon_{13}^{(\ell)} and passes them to EFT/UV interpretations.
 
 ⸻
 
-4) dim-6 EFT 接続：13専用 Yukawa 演算子
+4) dim-6 EFT 接続：13専用 Yukawa 演算子（概念枠組み）
 
-4) dim-6 EFT link: a 13-only Yukawa operator
+4) dim-6 EFT link: a 13-only Yukawa operator (conceptual bridge)
 
 \mathcal O^{(6)}_{13}=\frac{c_{13}}{\Lambda^2}(\bar Q_L\Phi d_R)(\Phi^\dagger\Phi)+{\rm h.c.}
 
@@ -125,23 +129,23 @@ c_{13}: a Wilson coefficient (dimensionless).
 \Lambda: the new-physics scale.
 	•	\bar Q_L, d_R：左手クォークダブレット／右手ダウン型です。
 \bar Q_L, d_R: left-handed quark doublet / right-handed down-type quark.
-	•	\Phi：Higgsダブレットです。
+	•	\Phi：Higgs ダブレットです。
 \Phi: the Higgs doublet.
-	•	(\Phi^\dagger\Phi)：ゲージ不変なHiggs二次です。
+	•	(\Phi^\dagger\Phi)：ゲージ不変な Higgs 二次です。
 (\Phi^\dagger\Phi): a gauge-invariant Higgs bilinear.
-	•	h.c.：エルミート共役です。
-h.c.: Hermitian conjugate.
+	•	{\rm h.c.}：エルミート共役です。
+{\rm h.c.}: Hermitian conjugate.
 
 役割
 Role
-\epsilon_{13} を「13チャネルに局在した有効演算子の寄与」として表現し、\Lambda を含む検証可能な予言に翻訳します。
-This expresses \epsilon_{13} as a contribution from an effective operator localized to the 13 channel, translating it into testable predictions involving \Lambda.
+\epsilon_{13} を「13チャネルに局在した有効演算子の寄与」として翻訳し、\Lambda を含む検証可能な予言に接続します。
+This translates \epsilon_{13} into a contribution from an effective operator localized to the 13 channel, connecting it to testable predictions involving \Lambda.
 
 ⸻
 
-5) 幾何学シーソー入力：絶対質量スケールの固定
+5) 幾何学シーソー入力：絶対質量スケールの固定（NO/IO）
 
-5) Geometric seesaw input: anchoring the absolute mass scale
+5) Geometric seesaw input: anchoring the absolute mass scale (NO/IO)
 
 m_\nu^{\rm geo}=m_e(\sqrt2)^{K_{\rm geo}},\qquad K_{\rm geo}=-48
 
@@ -156,111 +160,120 @@ K_{\rm geo}: a fixed geometric index.
 
 役割
 Role
-NO/IO のいずれでも絶対質量スケールを固定し、\sum m_\nu や m_{\beta\beta} を予言帯として出力可能にします。
-This anchors the absolute mass scale for both NO and IO, enabling prediction bands for \sum m_\nu and m_{\beta\beta}.
+NO/IO のいずれでも絶対質量スケールを固定し、\sum m_\nu、m_\beta、m_{\beta\beta} を予言帯として出力可能にします。
+This anchors the absolute mass scale for both NO and IO, enabling prediction bands for \sum m_\nu, m_\beta, and m_{\beta\beta}.
 
 ⸻
 
-6) 観測量：\sum m_\nu（図の縦軸）
+6) 観測量：\sum m_\nu, m_\beta, m_{\beta\beta}
 
-6) Observable: \sum m_\nu (the y-axis in the plots)
+6) Observables: \sum m_\nu, m_\beta, m_{\beta\beta}
 
-\sum m_\nu=m_1+m_2+m_3
+\sum m_\nu=m_1+m_2+m_3,\qquad
+m_\beta^2=\sum_i |U_{ei}|^2 m_i^2,\qquad
+m_{\beta\beta}=\left|\sum_i U_{ei}^2 m_i\right|
 
 意味（各項）
 Meaning (each term)
-	•	m_i：質量固有値です。
-m_i: mass eigenvalues.
+	•	m_i：軽いニュートリノ質量固有値です。
+m_i: light neutrino mass eigenvalues.
 	•	\sum m_\nu：ニュートリノ質量和（宇宙論量）です。
 \sum m_\nu: the neutrino mass sum (cosmological quantity).
+	•	|U_{ei}|：PMNS の e 行の絶対値（重み）です。
+|U_{ei}|: absolute values of the PMNS e-row (weights).
+	•	m_\beta：単一β崩壊の有効質量（位相非依存）です。
+m_\beta: effective mass in single beta decay (phase-independent).
+	•	m_{\beta\beta}：0νββの有効質量（位相干渉で帯）です。
+m_{\beta\beta}: effective mass for 0νββ (forms a band via phase interference).
 
 役割
 Role
-Gaussian MC により \epsilon_{13}^{(\ell)} と同時に \sum m_\nu の分布や相関を評価し、観測制限と直接比較します。
-With Gaussian MC, we evaluate distributions/correlations of \sum m_\nu alongside \epsilon_{13}^{(\ell)}, enabling direct comparison with observational bounds.
-
-⸻
-
-What the Gaussian MC produces / Gaussian MC が生成するもの
-
-What the Gaussian MC produces / What the Gaussian MC produces
-
-図（NO/IO それぞれ）として、\epsilon_{13}^{(\ell)} の分布（low/high overlay）を生成します。
-As figures (for both NO and IO), it generates the distribution of \epsilon_{13}^{(\ell)} with low/high octant overlay.
-
-さらに、\epsilon_{13}^{(\ell)} と \sum m_\nu の散布図（low/high overlay）を生成します。
-It also generates scatter plots of \epsilon_{13}^{(\ell)} versus \sum m_\nu with low/high overlay.
-
-典型的に、\epsilon_{13}^{(\ell)} はオクタントで符号・中心が分離し、\sum m_\nu との相関は非常に小さい（|\mathrm{corr}|\sim 10^{-3}）ことを確認します。
-Typically, \epsilon_{13}^{(\ell)} separates in sign/central value by octant, and its correlation with \sum m_\nu is extremely small (|\mathrm{corr}|\sim 10^{-3}).
+Gaussian MC により \epsilon_{13}^{(\ell)} と同時に観測量を統計評価し、論文の「検証可能な予言帯」を直接生成します。
+Gaussian MC evaluates these observables alongside \epsilon_{13}^{(\ell)}, directly producing the paper’s “testable prediction bands.”
 
 ⸻
 
 Directory Structure / ディレクトリ構造
 
 F2DV/
- ├── Code/	
- │    └── Gaussian_NO_and_IO.py
- │
- └─── Data/
-      ├── gaussian_mc_NO_dist_epsilon_l_13.png
-      ├── gaussian_mc_NO_epsilon_l_13_vs_sum_mnu.png
-      ├── gaussian_mc_IO_dist_epsilon_l_13.png
-      └── gaussian_mc_IO_epsilon_l_13_vs_sum_mnu.png
+ ├── Code/
+ │    ├── Gaussian_NO_and_IO.py
+ │    └── delta-angle_check_for_m_bb.py
+ ├── Data/
+ │    ├── gaussian_mc_NO_dist_epsilon_l_13.png
+ │    ├── gaussian_mc_NO_epsilon_l_13_vs_sum_mnu.png
+ │    ├── gaussian_mc_IO_dist_epsilon_l_13.png
+ │    ├── gaussian_mc_IO_epsilon_l_13_vs_sum_mnu.png
+ │    ├── gaussian_mc_NO_dist_mbeta.png            (optional)
+ │    ├── gaussian_mc_IO_dist_mbeta.png            (optional)
+ │    ├── pmns_epsilon13_gaussian_mc_NO_with_mbeta.csv  (optional)
+ │    ├── pmns_epsilon13_gaussian_mc_IO_with_mbeta.csv  (optional)
+ │    └── mbb_phase_scan_summary_NO.csv            (optional)
+ │        mbb_phase_scan_summary_IO.csv            (optional)
+ └── README.md
 
-Code/ には NO/IO の Gaussian MC を実行するスクリプトを置きます。
-Place the Gaussian MC script for NO/IO in Code/.
-
-Data/ には論文に貼り付ける最終図を置きます。
-Store final figures to be used in the paper in Data/.
+Code/ には解析スクリプト、Data/ には論文に貼る最終図・要約CSVを置きます。
+Code/ stores analysis scripts, and Data/ stores final figures and summary CSVs for the paper.
 
 ⸻
 
 Code / コード内容と役割
 
-Code / Code contents and roles
-
 Gaussian_NO_and_IO.py
 
-このスクリプトは、NO/IO それぞれについて Gaussian MC を実行し、\epsilon_{13}^{(\ell)} と \sum m_\nu の統計と図を生成します。
-This script runs Gaussian MC for NO and IO, generating statistics and plots for \epsilon_{13}^{(\ell)} and \sum m_\nu.
+NO/IO（および low/high octant）で Gaussian MC を走らせ、\epsilon_{13}^{(\ell)}、\sum m_\nu、m_\beta の統計量と図を生成します。
+Runs Gaussian MC for NO/IO (and low/high octants) to generate statistics and plots for \epsilon_{13}^{(\ell)}, \sum m_\nu, and m_\beta.
 
-出力として、分布ヒスト、散布図、平均・標準偏差・68%/95% CI・相関係数を得ます。
-It outputs histograms, scatter plots, and mean/std, 68%/95% CIs, and correlation coefficients.
+代表質量（各オクタントの代表値）を用いて Majorana 位相走査を行い、m_{\beta\beta} の予言帯要約（min/max, 68%CI, 95%CI）を CSV に保存します。
+Using representative masses per octant, it performs a Majorana-phase scan and saves an m_{\beta\beta} band summary (min/max, 68%CI, 95%CI) to CSV.
+
+delta-angle_check_for_m_bb.py
+
+同一の Majorana 位相サンプルを固定した上で δ を切り替え、m_{\beta\beta} の帯がどれだけ動くか（ほぼ普遍か）を検定します。
+Fixes the same Majorana-phase samples and switches δ to test how much the m_{\beta\beta} band moves (i.e., whether it is nearly universal).
 
 ⸻
 
 How to Use / 使用方法
 
-How to Use / How to use
-
 1) 環境構築
 
 1) Environment setup
 
-pip install numpy matplotlib
+pip install numpy pandas matplotlib
 
-2) 実行（NO/IO をまとめて生成）
+2) 実行（図とCSVを生成）
 
-2) Run (generate NO/IO in one go)
+2) Run (generate figures and CSVs)
 
 python Code/Gaussian_NO_and_IO.py
 
-3) 生成物の確認
+生成物はスクリプト内の outdir（例：GAV_outputs/）に出力されます。必要に応じて Data/ に移動してください。
+Outputs are written to the script’s outdir (e.g., GAV_outputs/). Move the final files into Data/ as needed.
 
-3) Check outputs
+3) δチェック（任意）
 
-Figures/ に PNG が生成されます。
-PNG figures will be generated in Figures/.
+3) δ-check (optional)
+
+python Code/delta-angle_check_for_m_bb.py
+
+
+⸻
+
+Notes / 注意
+
+\epsilon_{13}^{(\ell)} は「log2 比そのもの」ではなく、論文の x=\sqrt2-\epsilon 形式に一致するように 残差として定義しています。
+\epsilon_{13}^{(\ell)} is defined as a residual (not simply the log2 ratio itself) to match the paper’s form x=\sqrt2-\epsilon.
+
+（この定義により、本文の x_{13}=\sqrt2-\epsilon+\sin\theta_{13} へのマッチの整合性が保たれます。）
+(This preserves consistency with the paper’s matching to x_{13}=\sqrt2-\epsilon+\sin\theta_{13}.)
 
 ⸻
 
 Citation / 引用
 
-Citation / Citation
-
-このディレクトリの内容を使用する場合、以下を引用してください。
-If you use materials from this directory, please cite the following.
+本リポジトリの内容を使用する場合、以下を引用してください。
+If you use materials from this repository, please cite:
 
 Iwasaki, H. (2026).
 “Flavor from a √2-Discrete Vacuum: Hybrid Mass Chains, GAV Mixing, and EFT-Linked Residuals.”
